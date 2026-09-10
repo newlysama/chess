@@ -12,7 +12,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
-#include <omp.h>
+#include <oneapi/tbb.h>
 #include <random>
 #include <vector>
 
@@ -273,19 +273,7 @@ namespace engine::magics_generator
         std::array<uint64_t, 64> bMagicVals;
         std::array<uint8_t, 64> bShiftVals;
 
-        // Get the number of threads on host machine
-        int nproc = omp_get_num_procs();
-
-        // Turn off automatic thread adjustment
-        // Optional in practice, but I mean we never know
-        omp_set_dynamic(0);
-
-        // Specify the exact number of thread we want to use
-        omp_set_num_threads(nproc);
-
-#pragma omp parallel for
-        for (int square = 0; square < 64; ++square)
-        {
+        tbb::parallel_for(0, 64, [&](int square) {
             LOG_INFO("Computing magics for square {}", square);
             auto rmagic = findMagicRook(square);
             auto bmagic = findMagicBishop(square);
@@ -296,7 +284,7 @@ namespace engine::magics_generator
             LOG_INFO("Computing shifts for square {}", square);
             rShiftVals[square] = findShiftRook(square);
             bShiftVals[square] = findShiftBishop(square);
-        }
+        });
 
         // Print C++ constexpr initializers
         // clang-format off
