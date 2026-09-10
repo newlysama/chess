@@ -22,11 +22,3 @@ option(
     value       : false,
     description : 'Whether we want to play the game in the console.'
 )
-
-# Start a server to enable remote players
-option(
-    'server',
-    type        : 'boolean',
-    value       : false,
-    description : 'Whether we want to start the server to play in multiplayer.'
-)

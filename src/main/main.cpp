@@ -37,11 +37,6 @@ static int run(const options::Options& options)
 
     return 0;
 
-#elif defined(PLAY_SERVER)
-    LOG_INFO("Starting server (not implemented yet)");
-    // TODO: server loop here
-    return 0;
-
 #elif defined(GENERATE_MAGICS)
     engine::magics_generator::initMagics();
     return 0;

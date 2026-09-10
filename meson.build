@@ -6,6 +6,7 @@ project(
     'cpp_std=c++23',
     'warning_level=3',
     'default_library=static',
+    'buildtype=plain',
     ]
 )
 
@@ -16,7 +17,6 @@ project(
 mode            = get_option('mode')
 generate_magics = get_option('generate_magics')
 console         = get_option('console')
-server          = get_option('server')
 
 tbb_dep = dependency(
   'tbb',
@@ -26,16 +26,6 @@ tbb_dep = dependency(
 # Global project arguments
 add_project_arguments(
   '-DPROJECT_ROOT="' + meson.project_source_root() + '"',
-    '-Doptimization=3',
-    '-march=native',
-    '-mtune=native',
-    '-funroll-loops',
-    '-fomit-frame-pointer',
-  language: 'cpp'
-)
-
-add_project_link_arguments(
-  '-ltbb',
   language: 'cpp'
 )
 
@@ -43,7 +33,15 @@ if mode == 'debug'
   add_project_arguments(
     '-DBUILD_DEBUG',
     '-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE',
-    '-Db_sanitize=address',
+    '-O0',
+    '-g',
+    '-fsanitize=address',
+    '-fno-omit-frame-pointer',
+    language: 'cpp'
+  )
+
+  add_project_link_arguments(
+    '-fsanitize=address',
     language: 'cpp'
   )
 
@@ -51,6 +49,11 @@ elif mode == 'profile'
   add_project_arguments(
     '-DBUILD_PROFILE',
     '-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE',
+    '-O2',
+    '-g',
+    '-march=native',
+    '-mtune=native',
+    '-funroll-loops',
     language: 'cpp'
   )
 
@@ -58,6 +61,11 @@ elif mode == 'release'
   add_project_arguments(
     '-DBUILD_RELEASE',
     '-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_WARN',
+    '-O3',
+    '-march=native',
+    '-mtune=native',
+    '-funroll-loops',
+    '-fomit-frame-pointer',
     language: 'cpp'
   )
 
@@ -65,30 +73,19 @@ elif mode == 'test'
   add_project_arguments(
     '-DBUILD_TEST',
     '-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_WARN',
-    language: 'cpp'
-  )
-
-  add_project_link_arguments(
-    '-pthread',
-    '-lgtest',
-    '-lgtest_main',
+    '-O2',
     language: 'cpp'
   )
 endif
 
 if generate_magics == true
-  if server == true or console == true or mode == 'test'
-    error('Cannot use generate_magics with server/console option or test build mode.')
+  if console == true or mode == 'test'
+    error('Cannot use generate_magics with console option or test build mode.')
   else
     add_project_arguments(
       '-DGENERATE_MAGICS',
       language: 'cpp'
     )
-
-  add_project_link_arguments(
-    '-fopenmp',
-    language: 'cpp'
-  )
   endif
 endif
 
