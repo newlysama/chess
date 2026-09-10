@@ -403,11 +403,7 @@ namespace engine::game
             getCastlingMoves<Castling::BLACK_QUEEN_SIDE>(state, fromSquare);
         }
 
-        if (!state.m_isDoubleChecked)
-        {
-            this->processTargets(state, captureTargets, fromSquare, MoveType::CAPTURE, Piece::KING);
-        }
-
+        this->processTargets(state, captureTargets, fromSquare, MoveType::CAPTURE, Piece::KING);
         this->processTargets(state, quietTargets, fromSquare, MoveType::QUIET, Piece::KING);
     }
 
