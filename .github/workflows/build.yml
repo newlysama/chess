@@ -28,7 +28,7 @@ jobs:
       - name: Install build tooling
         run: |
           sudo apt-get update
-          sudo apt-get install -y meson ninja-build clang-19 lld-19 g++-14 build-essential libspdlog-dev libomp-19-dev libgtest-dev libtbb-dev
+          sudo apt-get install -y meson ninja-build clang-19 lld-19 g++-14 build-essential libspdlog-dev libgtest-dev libtbb-dev
 
           echo "CC='clang-19'"    >> $GITHUB_ENV
           echo "CXX='clang++-19'" >> $GITHUB_ENV

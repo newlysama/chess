@@ -2,7 +2,7 @@
 
 A chess engine written in **C++23**, built around **bitboards** and **magic bitboards** for fast, rigorously tested legal move generation (validated via *perft*). The project includes a playable console interface, a parallelized benchmark suite, and a comprehensive test suite.
 
-> ⚠️ **Before you start**: this repository is a **rules and move-generation engine**, not (yet) an artificial intelligence. There is no evaluation function and no search algorithm (minimax / alpha-beta): you can play two human players locally, in the console. A multiplayer server mode is planned but not yet implemented (see below).
+> ⚠️ **Before you start**: this repository is a **rules and move-generation engine**, not (yet) an artificial intelligence. There is no evaluation function and no search algorithm (minimax / alpha-beta): you can play two human players locally, in the console.
 
 ---
 
@@ -74,7 +74,7 @@ A GitHub Actions pipeline (`.github/workflows/build.yml`) automatically builds t
 
 ## What's not implemented yet
 
-- **Multiplayer server mode** (`-Dserver=true`): the build option exists and an entry point is stubbed out in `main.cpp`, but the actual networking logic is a `TODO` in the source code.
+- **Multiplayer server mode**: not implemented and not currently planned in the build system.
 - **AI / automated opponent**: no search algorithm (minimax, alpha-beta, MCTS, etc.) or position evaluation function exists yet. The engine produces legal moves but doesn't "choose" a move for you.
 
 ---
@@ -100,8 +100,8 @@ better-chess-engine/
 │   └── utils/               # Various utility functions
 ├── tests/engine/             # GoogleTest unit tests
 ├── meson.build                # Main build file
-├── meson_options.txt         # Build options (mode, console, server, generate_magics)
-└── requirements.txt           # Required system packages (OpenMP, spdlog)
+├── meson_options.txt         # Build options (mode, console, generate_magics)
+└── requirements.txt           # Required system packages (spdlog, gtest, oneTBB)
 ```
 
 ---
@@ -115,9 +115,8 @@ The project targets **Linux** (tested on Ubuntu 24.04) and requires:
 | C++23 compiler (Clang 19 or GCC 14 recommended) | Compilation |
 | [Meson](https://mesonbuild.com/) | Build system |
 | [Ninja](https://ninja-build.org/) | Build backend |
-| [Intel oneTBB](https://github.com/oneapi-src/oneTBB) (`libtbb-dev`) | Parallelizes the perft benchmark |
+| [Intel oneTBB](https://github.com/oneapi-src/oneTBB) (`libtbb-dev`) | Parallelizes the perft benchmark and the `generate_magics` mode |
 | [spdlog](https://github.com/gabime/spdlog) (`libspdlog-dev`) | Logging |
-| OpenMP (`libomp-dev`) | Required only for the `generate_magics` mode |
 | [GoogleTest](https://github.com/google/googletest) (`libgtest-dev`) | Required only for the `test` mode |
 
 ---
@@ -131,7 +130,7 @@ sudo apt-get update
 sudo apt-get install -y \
   meson ninja-build \
   clang-19 lld-19 g++-14 build-essential \
-  libspdlog-dev libomp-19-dev libgtest-dev libtbb-dev
+  libspdlog-dev libgtest-dev libtbb-dev
 ```
 
 Then, to use Clang as the compiler (recommended, as done in CI):
@@ -153,10 +152,9 @@ The project uses **Meson**, with a "single-mode build" system: each executable i
 |---|---|---|
 | `-Dmode` | `debug` \| `profile` \| `release` \| `test` | Optimization and logging level |
 | `-Dconsole` | `true` \| `false` | Builds the console-playable game |
-| `-Dserver` | `true` \| `false` | Reserved for the future server mode (not implemented) |
 | `-Dgenerate_magics` | `true` \| `false` | Builds the magic-number generation tool |
 
-> ⚠️ `generate_magics` is incompatible with `console`/`server` and with `test` mode: these are mutually exclusive builds.
+> ⚠️ `generate_magics` is incompatible with `console` and with `test` mode: these are mutually exclusive builds.
 
 ### Example: build the console-playable game (release)
 

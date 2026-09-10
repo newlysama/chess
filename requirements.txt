@@ -1,6 +1,12 @@
-# OpenMP
-libopenmpt-modplug1
-libopenmpt0t64
+# Build tooling
+meson
+ninja-build
 
-# SPDLog
+# SPDLog
 libspdlog-dev
+
+# GoogleTest (only needed for -Dmode=test)
+libgtest-dev
+
+# Intel oneTBB (perft benchmark + magic number generation)
+libtbb-dev
