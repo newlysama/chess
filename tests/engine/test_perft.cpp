@@ -358,18 +358,15 @@ namespace test
         counters.check(expected);
     }
 
-    /**
-     * @todo FIX ME
-     */
-    // TEST(PeftTest, FEN_5_DEPTH_5)
-    // {
-    //     Game game(FEN_5);
-    //     Counters counters;
+    TEST(PeftTest, FEN_5_DEPTH_5)
+    {
+        Game game(FEN_5);
+        Counters counters;
 
-    //     uint64_t nodes = perft<true>(game, 5, counters);
+        uint64_t nodes = perft<true>(game, 5, counters);
 
-    //     EXPECT_EQ(nodes, 89941194);
-    // }
+        EXPECT_EQ(nodes, 89941194);
+    }
 
     TEST(PeftTest, FEN_6_DEPTH_5)
     {
